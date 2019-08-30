@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Get all the jenkins stats
+# Copyright 2019 Tyler Cipriani; GPLv3
+
+set -euo pipefail
+
+BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+CSV_DIR="$( cd "${BIN_DIR}/../csv" >/dev/null 2>&1 && pwd )"
+IMG_DIR="$( cd "${BIN_DIR}/../img" >/dev/null 2>&1 && pwd )"
+
+STAT_NAME=
+STAT_TITLE=
+STAT_YAXIS=
+CSV=
+PNG=
+
+for script in "${BIN_DIR}"/jenkins-*; do
+    STAT_NAME=$(basename "$script")
+    STAT_TITLE=$("$script" title)
+    STAT_YAXIS=$("$script" yaxis)
+    CSV="${CSV_DIR}"/"${STAT_NAME}".csv
+    PNG="${IMG_DIR}"/"${STAT_NAME}".png
+
+    printf '[INFO] Running "%s"...' "$script"
+    "$script" > "$CSV"
+    "${BIN_DIR}"/plot "$CSV" "$STAT_YAXIS" "$STAT_TITLE" > "$PNG"
+    printf 'Done!\n'
+done

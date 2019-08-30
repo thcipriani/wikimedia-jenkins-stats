@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Total number of jenkins builds (excluding weekends)
+# Copyright 2019 Tyler Cipriani; GPLv3
+
+TITLE='Jenkins build time P95 (mediawiki/core)'
+YAXIS='Duration (minutes)'
+
+main() {
+    START_DATE=$(date +%s --date=2019-06-07)
+    END_DATE=$(date +%s --date=2019-08-30)
+    DATE=$START_DATE
+
+    JENKINS=https://people.wikimedia.org/~dduvall/jenkins/
+
+    # Day in seconds
+    ONE_DAY=86400
+
+    BUILDS=
+    ISO_DATE=
+    DAY_OF_WEEK=
+
+    weekend() {
+        local dow
+        dow="$1"
+        if (( dow > 5 )); then
+            return 1
+        else
+            return 0
+        fi
+    }
+
+    printf 'date,"%s"\n' "$YAXIS"
+    while (( DATE < END_DATE )); do
+        DAY_OF_WEEK=$(date +%u --date=@"$DATE")
+        if ! weekend "$DAY_OF_WEEK"; then
+            DATE=$(( DATE + ONE_DAY ))
+            continue
+        fi
+        ISO_DATE=$(date -I --date=@"$DATE")
+        BUILDS=$(curl -s "$JENKINS"/"$ISO_DATE"/1-day/durations-by-project.csv | awk -F, '$1 ~ "^mediawiki/core"{print $10}')
+        printf '%s,%s\n' "$ISO_DATE" "$BUILDS"
+        DATE=$(( DATE + ONE_DAY ))
+    done
+}
+
+if (( $# < 1 )); then
+    main
+elif [[ "$1" == "title" ]]; then
+    echo "$TITLE"
+elif [[ "$1" == "yaxis" ]]; then
+    echo "$YAXIS"
+fi
