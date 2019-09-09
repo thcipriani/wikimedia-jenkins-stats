@@ -7,7 +7,7 @@ YAXIS='Duration (minutes)'
 
 main() {
     START_DATE=$(date +%s --date=2019-06-07)
-    END_DATE=$(date +%s)
+    END_DATE=$(date +%s --date=yesterday)
     DATE=$START_DATE
 
     JENKINS=https://people.wikimedia.org/~dduvall/jenkins/
