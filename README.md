@@ -20,3 +20,6 @@ page](https://people.wikimedia.org/~dduvall/jenkins/)
 
 ![](img/jenkins-p95-mw-core.png)
 
+## Gerrit
+
+![](img/gerrit-project-count.png)
