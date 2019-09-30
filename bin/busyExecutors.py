@@ -11,7 +11,7 @@ r.raise_for_status()
 
 
 for computer in r.json()['computer']:
-    if not computer['displayName'].startswith('integration-slave-docker-'):
+    if not computer['displayName'].startswith('integration-agent-docker-'):
         continue
     print('{}\t{}\t{}'.format(
         datetime.utcnow(),
