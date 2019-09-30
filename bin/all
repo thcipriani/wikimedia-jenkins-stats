@@ -22,7 +22,13 @@ for script in "${BIN_DIR}"/jenkins-*; do
     PNG="${IMG_DIR}"/"${STAT_NAME}".png
 
     printf '[INFO] Running "%s"...' "$script"
-    "$script" > "$CSV"
-    "${BIN_DIR}"/plot "$CSV" "$STAT_YAXIS" "$STAT_TITLE" > "$PNG"
+
+    if [[ "$1" == "csv" ]]; then
+        "$script" > "$CSV"
+    fi
+
+    if [[ "$1" == "png" ]]; then
+        "${BIN_DIR}"/plot "$CSV" "$STAT_YAXIS" "$STAT_TITLE" > "$PNG"
+    fi
     printf 'Done!\n'
 done
