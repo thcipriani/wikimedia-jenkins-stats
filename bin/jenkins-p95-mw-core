@@ -38,7 +38,9 @@ main() {
         fi
         ISO_DATE=$(date -I --date=@"$DATE")
         BUILDS=$(curl -s "$JENKINS"/"$ISO_DATE"/1-day/durations-by-project.csv | awk -F, '$1 ~ "^mediawiki/core"{print $10}')
-        printf '%s,%s\n' "$ISO_DATE" "$BUILDS"
+        if [ -n "$BUILDS" ]; then
+            printf '%s,%s\n' "$ISO_DATE" "$BUILDS"
+        fi
         DATE=$(( DATE + ONE_DAY ))
     done
 }

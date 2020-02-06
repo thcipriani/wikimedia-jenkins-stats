@@ -38,7 +38,9 @@ main() {
         fi
         ISO_DATE=$(date -I --date=@"$DATE")
         BUILDS=$(curl -s "$JENKINS"/"$ISO_DATE"/1-day/durations-by-builton.csv | awk -F, '{builds+=$2}END{print builds}')
-        printf '%s,%s\n' "$ISO_DATE" "$BUILDS"
+        if [ -n "$BUILDS" ]; then
+            printf '%s,%s\n' "$ISO_DATE" "$BUILDS"
+        fi
         DATE=$(( DATE + ONE_DAY ))
     done
 }
